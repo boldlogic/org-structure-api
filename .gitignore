@@ -27,6 +27,10 @@ go.work.sum
 # env file
 .env
 
+.obsidian
 # Editor/IDE
 # .idea/
 # .vscode/
+app.log
+config.yaml
+docs
