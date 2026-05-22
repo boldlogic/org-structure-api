@@ -1,0 +1,17 @@
+# syntax=docker/dockerfile:1
+
+FROM golang:1.26-alpine AS builder
+WORKDIR /src
+COPY go.mod go.sum ./
+COPY --from=packages . /packages/
+RUN go mod download
+COPY . .
+RUN CGO_ENABLED=0 go build -ldflags="-s -w" -o /migrate ./cmd/migrator
+
+FROM alpine:3.20
+RUN apk add --no-cache ca-certificates
+WORKDIR /app
+COPY --from=builder /migrate /app/migrate
+COPY migrations /app/migrations
+COPY config.docker.yaml /app/config.yaml
+ENTRYPOINT ["/app/migrate", "-config", "config.yaml"]

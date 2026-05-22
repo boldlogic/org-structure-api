@@ -28,7 +28,12 @@ func NewHandler(svc Service, logger *zap.Logger) *Handler {
 }
 
 func (h *Handler) RegisterRoutes(mux *http.ServeMux) {
+	mux.HandleFunc("GET /health", h.health)
 	mux.HandleFunc("POST /departments/{$}", h.Adapt(h.createDepartment))
+}
+
+func (h *Handler) health(w http.ResponseWriter, _ *http.Request) {
+	w.WriteHeader(http.StatusOK)
 }
 
 type HandlerFunc func(r *http.Request) (any, string, error)
@@ -45,6 +50,8 @@ func (h *Handler) Adapt(fn HandlerFunc) http.HandlerFunc {
 				status = http.StatusRequestEntityTooLarge
 			case errors.Is(err, models.ErrValidation) || errors.Is(err, httputils.ErrReadingBody) || errors.Is(err, converters.ErrWrongJSON):
 				status = http.StatusBadRequest
+			case errors.Is(err, models.ErrConflict):
+				status = http.StatusConflict
 			default:
 				status = http.StatusInternalServerError
 			}

@@ -1,0 +1,22 @@
+logger:
+  level: "info"
+  format: "json"
+  output_file: ""
+http:
+  listen_ip: "0.0.0.0"
+  listen_port: 5000
+  server_opts:
+    read_timeout: 20
+    write_timeout: 20
+    shutdown_timeout: 20
+database:
+  driver: "postgres"
+  host: "postgres"
+  port: 5432
+  user: "org"
+  password: "org"
+  db_name: "org_structure"
+  ssl_mode: "disable"
+  pool_max_open_conns: 50
+  pool_max_idle_conns: 25
+  pool_conn_max_lifetime_sec: 300

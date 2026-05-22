@@ -7,12 +7,12 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/boldlogic/org-structure-api/internal/config"
 	"github.com/boldlogic/org-structure-api/internal/repository"
 	"github.com/boldlogic/org-structure-api/internal/service"
 	server "github.com/boldlogic/org-structure-api/internal/transport/http"
-	"github.com/boldlogic/org-structure-api/pkg/database"
+	"github.com/boldlogic/org-structure-api/pkg/config"
 	"github.com/boldlogic/packages/commonconfig"
+	"github.com/boldlogic/packages/dbgorm"
 	logger "github.com/boldlogic/packages/logger/zaplog"
 	"github.com/boldlogic/packages/transport/httpserver"
 	"go.uber.org/zap"
@@ -28,6 +28,7 @@ type Application struct {
 	Logger  *zap.Logger
 	srv     *httpserver.Server
 	repo    *repository.Repo
+	closeDB func() error
 	errChan chan error
 	wg      sync.WaitGroup
 }
@@ -49,11 +50,15 @@ func New() (*Application, error) {
 }
 
 func (a *Application) Start(ctx context.Context) error {
-	db, err := database.ConnectDatabase(a.cfg.Database.GetDSN())
+	gormDB, err := dbgorm.ConnectDatabase(ctx, &a.cfg.Database)
 	if err != nil {
 		return err
 	}
-	a.repo = repository.NewRepo(db, a.Logger)
+	a.closeDB = func() error {
+		return dbgorm.CloseDatabase(gormDB)
+	}
+
+	a.repo = repository.NewRepo(gormDB, a.Logger)
 	svc := service.NewService(a.repo)
 	handler := server.NewHandler(svc, a.Logger)
 	mux := http.NewServeMux()
@@ -96,6 +101,13 @@ func (a *Application) Wait(ctx context.Context, cancel context.CancelFunc) error
 	}
 
 	a.wg.Wait()
+
+	if a.closeDB != nil {
+		if err := a.closeDB(); err != nil {
+			a.Logger.Error("не удалось остановить соединение с БД", zap.Error(err))
+		}
+	}
+
 	close(a.errChan)
 	errWg.Wait()
 

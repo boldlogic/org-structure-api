@@ -1,0 +1,6 @@
+.obsidian
+app.log
+docs
+config.yaml
+.git
+*.txt

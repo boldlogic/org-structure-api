@@ -8,11 +8,6 @@ import (
 	"github.com/boldlogic/packages/transport/httputils"
 )
 
-type departmentReqDTO struct {
-	Name     string `json:"name" validate:"required,min=1,max=200"`
-	ParentID *int64 `json:"parent_id" validate:"omitempty"`
-}
-
 func (h *Handler) createDepartment(r *http.Request) (any, string, error) {
 	req, err := httputils.DecodeRequest[departmentReqDTO](r)
 	if err != nil {
@@ -23,7 +18,10 @@ func (h *Handler) createDepartment(r *http.Request) (any, string, error) {
 	}
 	dept, err := h.service.CreateDepartment(r.Context(), req.Name, req.ParentID)
 	if err != nil {
+		if errors.Is(err, models.ErrValidation) {
+			return nil, err.Error(), err
+		}
 		return nil, "", err
 	}
-	return dept, "", nil
+	return departmentToDto(dept), "", nil
 }
