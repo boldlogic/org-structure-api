@@ -3,7 +3,7 @@ module github.com/boldlogic/org-structure-api
 go 1.26.2
 
 require (
-	github.com/boldlogic/packages v0.1.26
+	github.com/boldlogic/packages v0.1.27
 	github.com/jackc/pgx/v5 v5.9.2
 	github.com/pressly/goose/v3 v3.27.1
 	github.com/stretchr/testify v1.11.1
@@ -40,4 +40,3 @@ require (
 	gorm.io/driver/postgres v1.6.0 // indirect
 	gorm.io/driver/sqlserver v1.6.3 // indirect
 )
-

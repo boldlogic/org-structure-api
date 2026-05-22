@@ -22,6 +22,8 @@ github.com/AzureAD/microsoft-authentication-library-for-go v1.1.1/go.mod h1:wP83
 github.com/AzureAD/microsoft-authentication-library-for-go v1.2.2/go.mod h1:wP83P5OoQ5p6ip3ScPr0BAq0BvuPAvacpEuSzyouqAI=
 github.com/AzureAD/microsoft-authentication-library-for-go v1.6.0 h1:XRzhVemXdgvJqCH0sFfrBUTnUJSBrBf7++ypk+twtRs=
 github.com/AzureAD/microsoft-authentication-library-for-go v1.6.0/go.mod h1:HKpQxkWaGLJ+D/5H8QRpyQXA1eKjxkFlOMwck5+33Jk=
+github.com/boldlogic/packages v0.1.27 h1:XQ6F5JDQR8c/CvSKL5WuhoAy3wejJhNpX6C5cZdNNic=
+github.com/boldlogic/packages v0.1.27/go.mod h1:eF7yy1EjALuY/l4dzOyaTfQLpak9GOcyGsbXuuVxFVU=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
