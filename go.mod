@@ -41,4 +41,3 @@ require (
 	gorm.io/driver/sqlserver v1.6.3 // indirect
 )
 
-replace github.com/boldlogic/packages => ../packages
