@@ -20,6 +20,12 @@ type updateDepartmentDTO struct {
 	ParentID **int64  `json:"parent_id" validate:"omitempty,min=1,max=2147483647"`
 }
 
+type createEmployeeDTO struct {
+	FullName string  `json:"full_name" validate:"required,min=1,max=200"`
+	Position string  `json:"position" validate:"required,min=1,max=200"`
+	HiredAt  *string `json:"hired_at" validate:"omitempty"`
+}
+
 func (d *updateDepartmentDTO) UnmarshalJSON(data []byte) error {
 	var absentName *string
 	var absentParentID *int64

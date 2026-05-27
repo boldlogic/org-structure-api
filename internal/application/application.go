@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"sync"
+	"time"
 
 	"github.com/boldlogic/org-structure-api/internal/repository"
 	"github.com/boldlogic/org-structure-api/internal/service"
@@ -97,7 +98,9 @@ func (a *Application) Wait(ctx context.Context, cancel context.CancelFunc) error
 	<-ctx.Done()
 
 	if a.srv != nil {
-		_ = a.srv.Shutdown(context.Background())
+		shCtx, shCancel := context.WithTimeout(context.Background(), time.Duration(a.cfg.HTTP.Opts.ShutdownTimeout)*time.Second)
+		defer shCancel()
+		_ = a.srv.Shutdown(shCtx)
 	}
 
 	a.wg.Wait()
