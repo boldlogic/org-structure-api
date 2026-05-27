@@ -14,6 +14,8 @@ import (
 
 type Service interface {
 	CreateDepartment(ctx context.Context, name string, parentID *int64) (models.Department, error)
+	GetDepartment(ctx context.Context, id int64, depth int) (models.Department, []models.Department, error)
+	UpdateDepartment(ctx context.Context, id int64, name *string, parentID *int64, parentIDSet bool) (models.Department, error)
 }
 type Handler struct {
 	service Service
@@ -30,6 +32,8 @@ func NewHandler(svc Service, logger *zap.Logger) *Handler {
 func (h *Handler) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /health", h.health)
 	mux.HandleFunc("POST /departments/{$}", h.Adapt(h.createDepartment))
+	mux.HandleFunc("GET /departments/{id}", h.Adapt(h.getDepartment))
+	mux.HandleFunc("PATCH /departments/{id}", h.Adapt(h.updateDepartment))
 }
 
 func (h *Handler) health(w http.ResponseWriter, _ *http.Request) {
@@ -50,8 +54,12 @@ func (h *Handler) Adapt(fn HandlerFunc) http.HandlerFunc {
 				status = http.StatusRequestEntityTooLarge
 			case errors.Is(err, models.ErrValidation) || errors.Is(err, httputils.ErrReadingBody) || errors.Is(err, converters.ErrWrongJSON):
 				status = http.StatusBadRequest
+			case errors.Is(err, models.ErrBusinessValidation):
+				status = http.StatusUnprocessableEntity
 			case errors.Is(err, models.ErrConflict):
 				status = http.StatusConflict
+			case errors.Is(err, models.ErrNotFound):
+				status = http.StatusNotFound
 			default:
 				status = http.StatusInternalServerError
 			}

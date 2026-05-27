@@ -8,6 +8,9 @@ import (
 
 type repository interface {
 	CreateDepartment(ctx context.Context, name string, parentID *int64) (models.Department, error)
+	SelectDepartmentById(ctx context.Context, id int64) (result models.Department, err error)
+	SelectChildrenDepartments(ctx context.Context, parentId int64, depth int) ([]models.Department, error)
+	UpdateDepartment(ctx context.Context, id int64, name *string, parentID *int64, parentIDSet bool) (models.Department, error)
 }
 
 type Service struct {
