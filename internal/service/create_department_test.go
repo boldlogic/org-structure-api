@@ -6,89 +6,82 @@ import (
 	"time"
 
 	"github.com/boldlogic/org-structure-api/internal/models"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
 
-type createDepartmentRepo struct {
-	depts      map[int64]models.Department
-	nextDeptID int64
-	err        error
-	gotName    string
-	gotParent  *int64
+type testRepo struct {
+	mock.Mock
 }
 
-func newCreateDepartmentRepo() *createDepartmentRepo {
-	parentID := int64(1)
-	depts := map[int64]models.Department{
-		1: {ID: 1, Name: "Корневой департамент", CreatedAt: time.Now()},
-		2: {ID: 2, Name: "Дочерний департамент", ParentID: &parentID, CreatedAt: time.Now()},
-	}
-	return &createDepartmentRepo{
-		depts:      depts,
-		nextDeptID: 3,
-	}
+func (r *testRepo) CreateDepartment(ctx context.Context, name string, parentID *int64) (models.Department, error) {
+	args := r.Called(ctx, name, parentID)
+
+	dep, _ := args.Get(0).(models.Department)
+	return dep, args.Error(1)
 }
 
-func (r *createDepartmentRepo) CreateDepartment(_ context.Context, name string, parentID *int64) (models.Department, error) {
-	r.gotName = name
-	r.gotParent = parentID
-	if r.err != nil {
-		return models.Department{}, r.err
-	}
-
-	r.nextDeptID++
-	dept := models.Department{
-		ID:        r.nextDeptID,
-		Name:      name,
-		ParentID:  parentID,
-		CreatedAt: time.Now(),
-	}
-	r.depts[dept.ID] = dept
-	return dept, nil
+func (r *testRepo) SelectDepartmentById(_ context.Context, id int64) (models.Department, error) {
+	return models.Department{}, nil
 }
 
-func (r *createDepartmentRepo) SelectDepartmentById(_ context.Context, id int64) (models.Department, error) {
-	dept, ok := r.depts[id]
-	if !ok {
-		return models.Department{}, models.ErrNotFound
-	}
-	return dept, nil
-}
-
-func (r *createDepartmentRepo) SelectChildrenDepartments(context.Context, int64, int) ([]models.Department, error) {
+func (r *testRepo) SelectChildrenDepartments(context.Context, int64, int) ([]models.Department, error) {
 	return nil, nil
 }
 
-func (r *createDepartmentRepo) UpdateDepartment(context.Context, int64, *string, *int64, bool) (models.Department, error) {
+func (r *testRepo) UpdateDepartment(context.Context, int64, *string, *int64, bool) (models.Department, error) {
 	return models.Department{}, nil
 }
 
 func Test_CreateDepartment(t *testing.T) {
 	parentID := int64(1)
+	otherParentID := int64(5)
+	сreated := time.Date(2026, 05, 27, 12, 0, 0, 0, time.UTC)
 
 	tests := []struct {
-		name     string
-		inName   string
-		inParent *int64
-		want     models.Department
-		wantErr  error
+		name       string
+		inName     string
+		inParent   *int64
+		repoName   string
+		repoParent *int64
+		repoDep    models.Department
+		repoErr    error
+		wantDep    models.Department
+		wantErr    error
 	}{
 		{
-			name:   "успешное_создание",
-			inName: "новый департамент",
-			want: models.Department{
-				ID:   4,
-				Name: "новый департамент",
+			name:     "успешное_создание",
+			inName:   "новый департамент",
+			repoName: "новый департамент",
+			repoDep: models.Department{
+				ID:        4,
+				Name:      "новый департамент",
+				CreatedAt: сreated,
+			},
+			wantDep: models.Department{
+				ID:        4,
+				Name:      "новый департамент",
+				CreatedAt: сreated,
 			},
 		},
 		{
-			name:     "успешное_создание_с_parent_id",
-			inName:   "новый департамент 2",
-			inParent: &parentID,
-			want: models.Department{
-				ID:       4,
-				Name:     "новый департамент 2",
-				ParentID: &parentID,
+			name:       "успешное_создание_с_parent_id",
+			inName:     "новый департамент 2",
+			inParent:   &parentID,
+			repoName:   "новый департамент 2",
+			repoParent: &parentID,
+			repoDep: models.Department{
+				ID:        4,
+				Name:      "новый департамент 2",
+				ParentID:  &parentID,
+				CreatedAt: сreated,
+			},
+			wantDep: models.Department{
+				ID:        4,
+				Name:      "новый департамент 2",
+				ParentID:  &parentID,
+				CreatedAt: сreated,
 			},
 		},
 		{
@@ -102,32 +95,63 @@ func Test_CreateDepartment(t *testing.T) {
 			wantErr: models.ErrValidation,
 		},
 		{
-			name:   "обрезает_пробелы",
-			inName: " новый департамент ",
-			want: models.Department{
-				ID:   4,
-				Name: "новый департамент",
+			name:     "обрезает_пробелы",
+			inName:   " новый департамент ",
+			repoName: "новый департамент",
+			repoDep: models.Department{
+				ID:        4,
+				Name:      "новый департамент",
+				CreatedAt: сreated,
 			},
+			wantDep: models.Department{
+				ID:        4,
+				Name:      "новый департамент",
+				CreatedAt: сreated,
+			},
+		},
+		{
+			name:     "конфликт",
+			inName:   " Подразделение ",
+			repoName: "Подразделение",
+			repoErr:  models.ErrConflict,
+			wantErr:  models.ErrConflict,
+		},
+		{
+			name:       "parent_id_не_существует",
+			inName:     "Подразделение",
+			inParent:   &otherParentID,
+			repoName:   "Подразделение",
+			repoParent: &otherParentID,
+			repoErr:    models.ErrParentNotFound,
+			wantErr:    models.ErrBusinessValidation,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			repo := newCreateDepartmentRepo()
-			svc := NewService(repo)
+			repo := new(testRepo)
+			if tt.repoName != "" {
+				repo.On("CreateDepartment", mock.Anything, tt.repoName, tt.repoParent).
+					Return(tt.repoDep, tt.repoErr).
+					Once()
+			}
 
+			svc := NewService(repo)
 			got, err := svc.CreateDepartment(context.Background(), tt.inName, tt.inParent)
+
 			if tt.wantErr != nil {
 				require.ErrorIs(t, err, tt.wantErr)
-				require.Equal(t, models.Department{}, got)
+				assert.Equal(t, models.Department{}, got)
+				if tt.repoName == "" {
+					repo.AssertNotCalled(t, "CreateDepartment")
+				}
+				repo.AssertExpectations(t)
 				return
 			}
 
 			require.NoError(t, err)
-			require.Equal(t, tt.want.ID, got.ID)
-			require.Equal(t, tt.want.Name, got.Name)
-			require.Equal(t, tt.want.ParentID, got.ParentID)
-			require.False(t, got.CreatedAt.IsZero())
+			assert.Equal(t, tt.wantDep, got)
+			repo.AssertExpectations(t)
 		})
 	}
 }
