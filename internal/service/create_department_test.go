@@ -30,6 +30,10 @@ func (r *testRepo) SelectChildrenDepartments(context.Context, int64, int) ([]mod
 	return nil, nil
 }
 
+func (r *testRepo) SelectEmployeesByDepartment(ctx context.Context, id int64) (result []int64, err error) {
+	return nil, nil
+}
+
 func (r *testRepo) UpdateDepartment(context.Context, int64, *string, *int64, bool) (models.Department, error) {
 	return models.Department{}, nil
 }
@@ -44,6 +48,9 @@ func (r *testRepo) DeleteDepartment(_ context.Context, _ int64) error {
 
 func (r *testRepo) SelectEmployeesDepartmentById(ctx context.Context, id int64) (result []models.Employee, err error) {
 	return nil, nil
+}
+func (r *testRepo) ReassignAndDelete(ctx context.Context, departmentId int64, newDepartmentId int64) (err error) {
+	return nil
 }
 
 func Test_CreateDepartment(t *testing.T) {

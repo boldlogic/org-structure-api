@@ -63,6 +63,13 @@ const (
 			d.parent_id,
 			d.created_at
 	`
+
+	updateDepartmentParentId = `
+		UPDATE org.departments d
+		SET 			parent_id = ?
+		WHERE
+			d.parent_id  = ?
+	`
 	checkReason = `
 		WITH q AS (
 			SELECT

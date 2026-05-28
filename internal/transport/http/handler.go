@@ -17,7 +17,7 @@ type Service interface {
 	CreateEmployee(ctx context.Context, emp models.Employee) (models.Employee, error)
 	GetDepartment(ctx context.Context, id int64, depth int, includeEmployeeFlag bool) (models.Department, []models.Department, []models.Employee, error)
 	UpdateDepartment(ctx context.Context, id int64, name *string, parentID *int64, parentIDSet bool) (models.Department, error)
-	DeleteDepartment(ctx context.Context, id int64) error
+	DeleteDepartment(ctx context.Context, id int64, mode string, reassignToDepartment *int64) error
 }
 type Handler struct {
 	service Service
