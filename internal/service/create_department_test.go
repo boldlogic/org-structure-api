@@ -34,8 +34,11 @@ func (r *testRepo) SelectEmployeesByDepartment(ctx context.Context, id int64) (r
 	return nil, nil
 }
 
-func (r *testRepo) UpdateDepartment(context.Context, int64, *string, *int64, bool) (models.Department, error) {
-	return models.Department{}, nil
+func (r *testRepo) UpdateDepartment(ctx context.Context, id int64, name *string, parentID *int64, parentIDSet bool) (models.Department, error) {
+	args := r.Called(ctx, id, name, parentID, parentIDSet)
+
+	dep, _ := args.Get(0).(models.Department)
+	return dep, args.Error(1)
 }
 
 func (r *testRepo) CreateEmployee(_ context.Context, _ models.Employee) (models.Employee, error) {

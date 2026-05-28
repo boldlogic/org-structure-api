@@ -28,14 +28,17 @@ func (s *Service) UpdateDepartment(ctx context.Context, id int64, name *string, 
 
 	out, err := s.repo.UpdateDepartment(ctx, id, name, parentID, parentIDSet)
 	if err != nil {
+		if errors.Is(err, models.ErrCycle) {
+			return models.Department{}, fmt.Errorf(
+				"%w: нельзя сделать подразделение %d потомком своего поддерева",
+				models.ErrConflict, id,
+			)
+		}
 		if errors.Is(err, models.ErrConflict) {
 			return models.Department{}, fmt.Errorf("%w: подразделение с таким названием уже существует у родителя", err)
 		}
 		if errors.Is(err, models.ErrParentNotFound) && parentID != nil {
 			return models.Department{}, fmt.Errorf("%w: %w %d", models.ErrBusinessValidation, err, *parentID)
-		}
-		if errors.Is(err, models.ErrNotFound) {
-			return models.Department{}, err
 		}
 		return models.Department{}, err
 	}

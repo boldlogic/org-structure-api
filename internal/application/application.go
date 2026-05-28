@@ -11,6 +11,7 @@ import (
 	"github.com/boldlogic/org-structure-api/internal/repository"
 	"github.com/boldlogic/org-structure-api/internal/service"
 	server "github.com/boldlogic/org-structure-api/internal/transport/http"
+	"github.com/boldlogic/org-structure-api/internal/transport/middleware"
 	"github.com/boldlogic/org-structure-api/pkg/config"
 	"github.com/boldlogic/packages/commonconfig"
 	"github.com/boldlogic/packages/dbgorm"
@@ -64,7 +65,10 @@ func (a *Application) Start(ctx context.Context) error {
 	handler := server.NewHandler(svc, a.Logger)
 	mux := http.NewServeMux()
 	handler.RegisterRoutes(mux)
-	a.srv = httpserver.NewServer(mux, a.cfg.HTTP)
+	middle := middleware.NewMiddleware(a.Logger)
+	rec := middle.Recover(mux)
+	wrapped := middle.WithLogging(rec)
+	a.srv = httpserver.NewServer(wrapped, a.cfg.HTTP)
 
 	a.wg.Add(1)
 	go func() {

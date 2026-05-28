@@ -10,4 +10,5 @@ var (
 	ErrNotFound           = errors.New("запись с таким ключом не существует")  //запись с таким ключом не существует
 	ErrBusinessValidation = errors.New("некорректные данные в запросе")        //некорректные данные в запросе
 	ErrParentNotFound     = errors.New("parent_id не существует")              //parent_id не существует
+	ErrCycle              = errors.New("цикл в дереве подразделений")          //цикл в дереве подразделений
 )

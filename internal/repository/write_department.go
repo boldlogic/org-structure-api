@@ -103,6 +103,31 @@ const (
 		SELECT reason
 		FROM src
 	`
+	checkDepartmentCycle = `
+		WITH RECURSIVE sub AS (
+			SELECT
+				id
+			FROM
+				org.departments
+			WHERE
+				id = ?::integer
+			UNION ALL
+			SELECT
+				d.id
+			FROM
+				org.departments d
+				INNER JOIN sub ON d.parent_id = sub.id
+		)
+		SELECT
+			CASE
+				WHEN EXISTS (
+					SELECT 1
+					FROM sub
+					WHERE id = ?
+				) THEN 'cycle'
+				ELSE 'ok'
+			END AS reason
+	`
 )
 
 func (r *Repo) insertDepartment(ctx context.Context, name string, parentID *int64) (result department, err error) {
@@ -157,6 +182,17 @@ func (r *Repo) UpdateDepartment(ctx context.Context, id int64, name *string, par
 	defer func() { r.logWrapper("UpdateDepartment", err) }()
 	if name == nil && !parentIDSet {
 		return models.Department{}, models.ErrValidation
+	}
+
+	if parentIDSet && parentID != nil {
+		var reason string
+		err = r.db.WithContext(ctx).Raw(checkDepartmentCycle, id, *parentID).Scan(&reason).Error
+		if err != nil {
+			return models.Department{}, err
+		}
+		if reason == "cycle" {
+			return models.Department{}, models.ErrCycle
+		}
 	}
 
 	var row department
