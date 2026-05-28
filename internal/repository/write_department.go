@@ -17,95 +17,85 @@ const (
 				?::varchar(200) AS name,
 				?::integer AS parent_id
 		)
-		INSERT INTO
-			org.departments (name, parent_id)
+		INSERT INTO org.departments (name, parent_id)
 		SELECT
 			name,
 			parent_id
-		FROM
-			src
+		FROM src
 		WHERE
 			NOT EXISTS (
-				SELECT
-					1
-				FROM
-					org.departments d
+				SELECT 1
+				FROM org.departments d
 				WHERE
 					d.name = src.name
 					AND (
-						(
-							d.parent_id IS NULL
-							AND src.parent_id IS NULL
-						)
+						(d.parent_id IS NULL AND src.parent_id IS NULL)
 						OR d.parent_id = src.parent_id
 					)
 			)
 			AND (
 				src.parent_id IS NULL
-				or exists(
-					select
-						1
-					from
-						org.departments e
-					where
-						e.id = src.parent_id
+				OR EXISTS (
+					SELECT 1
+					FROM org.departments e
+					WHERE e.id = src.parent_id
 				)
 			)
-		RETURNING id, name, parent_id, created_at
-`
-	updateDepartment = `	
-		UPDATE
-			org.departments d
+		RETURNING
+			id,
+			name,
+			parent_id,
+			created_at
+	`
+	updateDepartment = `
+		UPDATE org.departments d
 		SET
 			name = COALESCE(?, d.name),
-			parent_id = CASE WHEN ? THEN ? ELSE d.parent_id END
+			parent_id = CASE
+				WHEN ? THEN ?
+				ELSE d.parent_id
+			END
 		WHERE
-			d.id = ? RETURNING d.id,
+			d.id = ?
+		RETURNING
+			d.id,
 			d.name,
 			d.parent_id,
-			d.created_at		
-`
+			d.created_at
+	`
 	checkReason = `
 		WITH q AS (
 			SELECT
-				? :: varchar(200) AS name,
-				? :: integer AS parent_id
+				?::varchar(200) AS name,
+				?::integer AS parent_id
 		),
-		src as (
+		src AS (
 			SELECT
 				name,
 				parent_id,
-				case when exists (
-					select
-						1
-					from
-						org.departments d
-					where
-						d.name = q.name
-						AND (
-							(
-								d.parent_id IS NULL
-								AND q.parent_id IS NULL
+				CASE
+					WHEN EXISTS (
+						SELECT 1
+						FROM org.departments d
+						WHERE
+							d.name = q.name
+							AND (
+								(d.parent_id IS NULL AND q.parent_id IS NULL)
+								OR d.parent_id = q.parent_id
 							)
-							OR d.parent_id = q.parent_id
-						)
-				) then 'double_name' 
-				when not exists (
-					select
-						1
-					from
-						org.departments e
-					where
-						e.id = q.parent_id
-				) then 'not_existing_parent_id' 
-				else 'ok' end as reason
-			FROM
-				q
+					) THEN 'double_name'
+					WHEN NOT EXISTS (
+						SELECT 1
+						FROM org.departments e
+						WHERE e.id = q.parent_id
+					) THEN 'not_existing_parent_id'
+					ELSE 'ok'
+				END AS reason
+			FROM q
 		)
-		select
-			reason
-		from
-			src `
+		SELECT reason
+		FROM src
+	`
 )
 
 func (r *Repo) insertDepartment(ctx context.Context, name string, parentID *int64) (result department, err error) {
@@ -181,6 +171,21 @@ func (r *Repo) UpdateDepartment(ctx context.Context, id int64, name *string, par
 		return models.Department{}, models.ErrNotFound
 	}
 	return toDepartment(row), nil
+}
+
+const deleteDepartment = `DELETE FROM org.departments WHERE id = ?`
+
+func (r *Repo) DeleteDepartment(ctx context.Context, id int64) (err error) {
+	defer func() { r.logWrapper("DeleteDepartment", err) }()
+
+	res := r.db.WithContext(ctx).Exec(deleteDepartment, id)
+	if res.Error != nil {
+		return res.Error
+	}
+	if res.RowsAffected == 0 {
+		return models.ErrNotFound
+	}
+	return nil
 }
 
 func toDepartment(r department) models.Department {

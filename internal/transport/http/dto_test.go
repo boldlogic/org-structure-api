@@ -187,3 +187,102 @@ func Test_updateDepartmentDTO(t *testing.T) {
 		})
 	}
 }
+
+func Test_createEmployeeDTO(t *testing.T) {
+	date := "2024-06-15"
+	tests := []struct {
+		name   string
+		body   string
+		want   createEmployeeDTO
+		hasErr bool
+	}{
+		{
+			name: "валидный_полный_запрос",
+			body: `{"full_name":"Иванов","position":"инженер","hired_at":"2024-06-15"}`,
+			want: createEmployeeDTO{FullName: "Иванов", Position: "инженер", HiredAt: &date},
+		},
+		{
+			name: "без_hired_at",
+			body: `{"full_name":"Иванов","position":"инженер"}`,
+			want: createEmployeeDTO{FullName: "Иванов", Position: "инженер", HiredAt: nil},
+		},
+		{
+			name:   "без_full_name",
+			body:   `{"position":"инженер"}`,
+			hasErr: true,
+		},
+		{
+			name:   "без_position",
+			body:   `{"full_name":"Иванов"}`,
+			hasErr: true,
+		},
+		{
+			name: "валидный_запрос_с_null_hired_at",
+			body: `{"full_name":"Иванов","position":"инженер","hired_at":null}`,
+			want: createEmployeeDTO{FullName: "Иванов", Position: "инженер", HiredAt: nil},
+		},
+		{
+			name:   "full_name_null",
+			body:   `{"full_name":null,"position":"инженер"}`,
+			hasErr: true,
+		},
+		{
+			name:   "position_null",
+			body:   `{"full_name":"Иванов","position":null}`,
+			hasErr: true,
+		},
+		{
+			name: "full_name_1_символ",
+			body: `{"full_name":"а","position":"б"}`,
+			want: createEmployeeDTO{FullName: "а", Position: "б", HiredAt: nil},
+		},
+		{
+			name: "full_name_200_символов",
+			body: fmt.Sprintf(`{"full_name":"%s","position":"б"}`, strings.Repeat("a", 200)),
+			want: createEmployeeDTO{FullName: strings.Repeat("a", 200), Position: "б", HiredAt: nil},
+		},
+		{
+			name: "position_200_символов",
+			body: fmt.Sprintf(`{"full_name":"а","position":"%s"}`, strings.Repeat("b", 200)),
+			want: createEmployeeDTO{FullName: "а", Position: strings.Repeat("b", 200), HiredAt: nil},
+		},
+		{
+			name:   "full_name_выше_ограничения",
+			body:   fmt.Sprintf(`{"full_name":"%s","position":"б"}`, strings.Repeat("a", 201)),
+			hasErr: true,
+		},
+		{
+			name:   "position_выше_ограничения",
+			body:   fmt.Sprintf(`{"full_name":"а","position":"%s"}`, strings.Repeat("b", 201)),
+			hasErr: true,
+		},
+		{
+			name:   "hired_at_неверный_формат",
+			body:   `{"full_name":"Иванов","position":"инженер","hired_at":"15.06.2024"}`,
+			hasErr: true,
+		},
+		{
+			name:   "hired_at_некорректная_дата",
+			body:   `{"full_name":"Иванов","position":"инженер","hired_at":"2024-13-40"}`,
+			hasErr: true,
+		},
+	}
+	for _, testCase := range tests {
+		tt := testCase
+
+		t.Run(tt.name, func(t *testing.T) {
+
+			req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(tt.body))
+			req.Header.Set("Content-Type", "application/json")
+			got, err := httputils.DecodeRequest[createEmployeeDTO](req)
+			if tt.hasErr {
+				require.Error(t, err)
+				return
+			}
+
+			require.NoError(t, err)
+			assert.Equal(t, tt.want, got)
+
+		})
+	}
+}

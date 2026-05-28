@@ -8,6 +8,7 @@ import (
 
 	"github.com/boldlogic/org-structure-api/internal/models"
 	"github.com/boldlogic/packages/utils/converters"
+	"github.com/boldlogic/packages/utils/dates"
 )
 
 type createDepartmentDTO struct {
@@ -23,7 +24,25 @@ type updateDepartmentDTO struct {
 type createEmployeeDTO struct {
 	FullName string  `json:"full_name" validate:"required,min=1,max=200"`
 	Position string  `json:"position" validate:"required,min=1,max=200"`
-	HiredAt  *string `json:"hired_at" validate:"omitempty"`
+	HiredAt  *string `json:"hired_at" validate:"omitempty,datetime=2006-01-02"`
+}
+
+func (d createEmployeeDTO) toEmployee(deptID int64) (models.Employee, error) {
+	var hiredAt *time.Time
+	if d.HiredAt != nil {
+		var err error
+		hiredAt, err = dates.OptionalDatePtr(*d.HiredAt, dates.ISODateFormat)
+		if err != nil {
+			return models.Employee{}, fmt.Errorf("%w: %w: поле hired_at", models.ErrValidation, err)
+		}
+	}
+
+	return models.Employee{
+		DepartmentID: deptID,
+		FullName:     d.FullName,
+		Position:     d.Position,
+		HiredAt:      hiredAt,
+	}, nil
 }
 
 func (d *updateDepartmentDTO) UnmarshalJSON(data []byte) error {
@@ -104,5 +123,31 @@ func departmentToDto(dep models.Department) departmentRespDTO {
 		Name:      dep.Name,
 		ParentID:  dep.ParentID,
 		CreatedAt: dep.CreatedAt,
+	}
+}
+
+type employeeRespDTO struct {
+	ID           int64     `json:"id"`
+	DepartmentID int64     `json:"department_id"`
+	FullName     string    `json:"full_name"`
+	Position     string    `json:"position"`
+	HiredAt      *string   `json:"hired_at,omitempty"`
+	CreatedAt    time.Time `json:"created_at"`
+}
+
+func employeeToDto(emp models.Employee) employeeRespDTO {
+	var hiredAt *string
+	if emp.HiredAt != nil {
+		s := emp.HiredAt.Format(dates.ISODateFormat)
+		hiredAt = &s
+	}
+
+	return employeeRespDTO{
+		ID:           emp.ID,
+		DepartmentID: emp.DepartmentID,
+		FullName:     emp.FullName,
+		Position:     emp.Position,
+		HiredAt:      hiredAt,
+		CreatedAt:    emp.CreatedAt,
 	}
 }

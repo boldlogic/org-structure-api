@@ -34,6 +34,14 @@ func (r *testRepo) UpdateDepartment(context.Context, int64, *string, *int64, boo
 	return models.Department{}, nil
 }
 
+func (r *testRepo) CreateEmployee(_ context.Context, _ models.Employee) (models.Employee, error) {
+	return models.Employee{}, nil
+}
+
+func (r *testRepo) DeleteDepartment(_ context.Context, _ int64) error {
+	return nil
+}
+
 func Test_CreateDepartment(t *testing.T) {
 	parentID := int64(1)
 	otherParentID := int64(5)

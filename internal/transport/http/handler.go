@@ -14,8 +14,10 @@ import (
 
 type Service interface {
 	CreateDepartment(ctx context.Context, name string, parentID *int64) (models.Department, error)
+	CreateEmployee(ctx context.Context, emp models.Employee) (models.Employee, error)
 	GetDepartment(ctx context.Context, id int64, depth int) (models.Department, []models.Department, error)
 	UpdateDepartment(ctx context.Context, id int64, name *string, parentID *int64, parentIDSet bool) (models.Department, error)
+	DeleteDepartment(ctx context.Context, id int64) error
 }
 type Handler struct {
 	service Service
@@ -32,9 +34,10 @@ func NewHandler(svc Service, logger *zap.Logger) *Handler {
 func (h *Handler) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /health", h.health)
 	mux.HandleFunc("POST /departments/{$}", h.Adapt(h.createDepartment))
-	mux.HandleFunc("POST /departments/{id}/employees", h.Adapt(h.createEmployee))
+	mux.HandleFunc("POST /departments/{id}/employees/{$}", h.Adapt(h.createEmployee))
 	mux.HandleFunc("GET /departments/{id}", h.Adapt(h.getDepartment))
 	mux.HandleFunc("PATCH /departments/{id}", h.Adapt(h.updateDepartment))
+	mux.HandleFunc("DELETE /departments/{id}", h.Adapt(h.deleteDepartment))
 }
 
 func (h *Handler) health(w http.ResponseWriter, _ *http.Request) {

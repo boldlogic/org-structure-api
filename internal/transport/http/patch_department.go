@@ -16,10 +16,8 @@ func (h *Handler) updateDepartment(r *http.Request) (any, string, error) {
 
 	req, err := httputils.DecodeRequest[updateDepartmentDTO](r)
 	if err != nil {
-		if errors.Is(err, httputils.ErrUnsupportedMediaType) || errors.Is(err, httputils.ErrRequestEntityTooLarge) {
-			return nil, err.Error(), err
-		}
-		return nil, err.Error(), models.ErrValidation
+		err = mapTransportErrors(err)
+		return nil, err.Error(), err
 	}
 
 	if req.Name == nil {
