@@ -39,14 +39,3 @@ func (r *Repo) CreateEmployee(ctx context.Context, emp models.Employee) (result 
 
 	return toEmployee(row), nil
 }
-
-func toEmployee(r employee) models.Employee {
-	return models.Employee{
-		ID:           r.ID,
-		DepartmentID: r.DepartmentID,
-		FullName:     r.FullName,
-		Position:     r.Position,
-		HiredAt:      r.HiredAt,
-		CreatedAt:    r.CreatedAt,
-	}
-}

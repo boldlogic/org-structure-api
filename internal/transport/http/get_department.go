@@ -20,11 +20,20 @@ func (h *Handler) getDepartment(r *http.Request) (any, string, error) {
 	if rawDepth != "" {
 		depth, err = strconv.Atoi(rawDepth)
 		if err != nil {
-			return nil, fmt.Sprintf("некорректное значение depth: %s", rawDepth), models.ErrValidation
+			return nil, fmt.Sprintf("depth=%q, разрешено число от 1 до 5", rawDepth), models.ErrValidation
+		}
+	}
+	includeFlag := true
+
+	rawIncludeFlag := r.URL.Query().Get("include_employees")
+	if rawIncludeFlag != "" {
+		includeFlag, err = strconv.ParseBool(rawIncludeFlag)
+		if err != nil {
+			return nil, fmt.Sprintf("include_employees=%q, разрешено true или false", rawIncludeFlag), models.ErrValidation
 		}
 	}
 
-	dep, children, err := h.service.GetDepartment(r.Context(), id, depth)
+	dep, children, emp, err := h.service.GetDepartment(r.Context(), id, depth, includeFlag)
 	if err != nil {
 		if errors.Is(err, models.ErrNotFound) || errors.Is(err, models.ErrBusinessValidation) {
 			return nil, err.Error(), err
@@ -32,6 +41,6 @@ func (h *Handler) getDepartment(r *http.Request) (any, string, error) {
 		return nil, "", err
 	}
 
-	return departmentByIdToDTO(dep, children), "", nil
+	return departmentByIdToDTO(dep, children, emp), "", nil
 
 }

@@ -35,12 +35,6 @@ services:
         condition: service_healthy
     ports:
       - "5000:5000"
-    healthcheck:
-      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:5000/health"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
-      start_period: 15s
 
 volumes:
   pgdata:

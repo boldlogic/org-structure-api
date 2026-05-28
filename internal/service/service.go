@@ -13,6 +13,7 @@ type repository interface {
 	SelectChildrenDepartments(ctx context.Context, parentId int64, depth int) ([]models.Department, error)
 	UpdateDepartment(ctx context.Context, id int64, name *string, parentID *int64, parentIDSet bool) (models.Department, error)
 	DeleteDepartment(ctx context.Context, id int64) error
+	SelectEmployeesDepartmentById(ctx context.Context, id int64) (result []models.Employee, err error)
 }
 
 type Service struct {

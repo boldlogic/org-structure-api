@@ -15,7 +15,7 @@ import (
 type Service interface {
 	CreateDepartment(ctx context.Context, name string, parentID *int64) (models.Department, error)
 	CreateEmployee(ctx context.Context, emp models.Employee) (models.Employee, error)
-	GetDepartment(ctx context.Context, id int64, depth int) (models.Department, []models.Department, error)
+	GetDepartment(ctx context.Context, id int64, depth int, includeEmployeeFlag bool) (models.Department, []models.Department, []models.Employee, error)
 	UpdateDepartment(ctx context.Context, id int64, name *string, parentID *int64, parentIDSet bool) (models.Department, error)
 	DeleteDepartment(ctx context.Context, id int64) error
 }
@@ -38,10 +38,6 @@ func (h *Handler) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /departments/{id}", h.Adapt(h.getDepartment))
 	mux.HandleFunc("PATCH /departments/{id}", h.Adapt(h.updateDepartment))
 	mux.HandleFunc("DELETE /departments/{id}", h.Adapt(h.deleteDepartment))
-}
-
-func (h *Handler) health(w http.ResponseWriter, _ *http.Request) {
-	w.WriteHeader(http.StatusOK)
 }
 
 type HandlerFunc func(r *http.Request) (any, string, error)

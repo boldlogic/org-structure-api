@@ -27,6 +27,28 @@ type createEmployeeDTO struct {
 	HiredAt  *string `json:"hired_at" validate:"omitempty,datetime=2006-01-02"`
 }
 
+type departmentRespDTO struct {
+	ID        int64     `json:"id"`
+	Name      string    `json:"name,omitempty"`
+	ParentID  *int64    `json:"parent_id,omitempty"`
+	CreatedAt time.Time `json:"created_at"`
+}
+
+type departmentByIdRespDTO struct {
+	Department departmentRespDTO   `json:"department"`
+	Children   []departmentRespDTO `json:"children,omitempty"`
+	Employees  []employeeRespDTO   `json:"employees,omitempty"`
+}
+
+type employeeRespDTO struct {
+	ID           int64     `json:"id"`
+	DepartmentID int64     `json:"department_id"`
+	FullName     string    `json:"full_name"`
+	Position     string    `json:"position"`
+	HiredAt      *string   `json:"hired_at,omitempty"`
+	CreatedAt    time.Time `json:"created_at"`
+}
+
 func (d createEmployeeDTO) toEmployee(deptID int64) (models.Employee, error) {
 	var hiredAt *time.Time
 	if d.HiredAt != nil {
@@ -91,28 +113,22 @@ func (d *updateDepartmentDTO) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-type departmentRespDTO struct {
-	ID        int64     `json:"id"`
-	Name      string    `json:"name,omitempty"`
-	ParentID  *int64    `json:"parent_id,omitempty"`
-	CreatedAt time.Time `json:"created_at"`
-}
-
-type departmentByIdRespDTO struct {
-	Department departmentRespDTO   `json:"department"`
-	Children   []departmentRespDTO `json:"children,omitempty"`
-}
-
-func departmentByIdToDTO(dep models.Department, children []models.Department) departmentByIdRespDTO {
+func departmentByIdToDTO(dep models.Department, children []models.Department, employees []models.Employee) departmentByIdRespDTO {
 	childs := make([]departmentRespDTO, 0, len(children))
 
 	for _, c := range children {
 		childs = append(childs, departmentToDto(c))
 	}
 
+	emp := make([]employeeRespDTO, 0, len(employees))
+	for _, e := range employees {
+		emp = append(emp, employeeToDto(e))
+	}
+
 	out := departmentByIdRespDTO{
 		Department: departmentToDto(dep),
 		Children:   childs,
+		Employees:  emp,
 	}
 	return out
 }
@@ -124,15 +140,6 @@ func departmentToDto(dep models.Department) departmentRespDTO {
 		ParentID:  dep.ParentID,
 		CreatedAt: dep.CreatedAt,
 	}
-}
-
-type employeeRespDTO struct {
-	ID           int64     `json:"id"`
-	DepartmentID int64     `json:"department_id"`
-	FullName     string    `json:"full_name"`
-	Position     string    `json:"position"`
-	HiredAt      *string   `json:"hired_at,omitempty"`
-	CreatedAt    time.Time `json:"created_at"`
 }
 
 func employeeToDto(emp models.Employee) employeeRespDTO {

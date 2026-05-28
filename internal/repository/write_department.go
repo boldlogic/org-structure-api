@@ -187,22 +187,3 @@ func (r *Repo) DeleteDepartment(ctx context.Context, id int64) (err error) {
 	}
 	return nil
 }
-
-func toDepartment(r department) models.Department {
-	return models.Department{
-		ID:        r.ID,
-		Name:      r.Name,
-		ParentID:  r.ParentID,
-		CreatedAt: r.CreatedAt,
-	}
-}
-
-func toDepartments(r []department) []models.Department {
-	var out = make([]models.Department, 0, len(r))
-
-	for _, d := range r {
-		out = append(out, toDepartment(d))
-	}
-
-	return out
-}

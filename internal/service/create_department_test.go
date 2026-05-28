@@ -42,6 +42,10 @@ func (r *testRepo) DeleteDepartment(_ context.Context, _ int64) error {
 	return nil
 }
 
+func (r *testRepo) SelectEmployeesDepartmentById(ctx context.Context, id int64) (result []models.Employee, err error) {
+	return nil, nil
+}
+
 func Test_CreateDepartment(t *testing.T) {
 	parentID := int64(1)
 	otherParentID := int64(5)
