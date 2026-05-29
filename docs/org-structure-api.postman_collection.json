@@ -1,0 +1,4487 @@
+{
+  "info": {
+    "_postman_id": "380db033-59ac-4d9e-98fb-df705a2a4989",
+    "name": "org-structure-api",
+    "description": "API организационной структуры",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "18358433",
+    "_collection_link": "https://go.postman.co/collection/18358433-380db033-59ac-4d9e-98fb-df705a2a4989?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "00 Health",
+      "item": [
+        {
+          "name": "GET health",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "01 Setup happy path",
+      "item": [
+        {
+          "name": "01 POST root department",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "if (pm.response.code === 201) {",
+                  "    const body = pm.response.json();",
+                  "    pm.collectionVariables.set(\"rootDeptId\", body.id);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Подразделение\"\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "01 POST root department",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Подразделение\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    ""
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:24:51 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "93"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"id\": 28,\n    \"name\": \"Подразделение\",\n    \"created_at\": \"2026-05-28T10:24:51.691583+05:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "02 POST child department",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "if (pm.response.code === 201) {",
+                  "    const body = pm.response.json();",
+                  "    pm.collectionVariables.set(\"childDeptId\", body.id);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Дочернее\",\r\n    \"parent_id\": {{rootDeptId}}\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "02 POST child department",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Дочернее\",\r\n    \"parent_id\": {{rootDeptId}}\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    ""
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:25:45 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "98"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"id\": 29,\n    \"name\": \"Дочернее\",\n    \"parent_id\": 28,\n    \"created_at\": \"2026-05-28T10:25:45.250209+05:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "03 POST employee",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "if (pm.response.code === 201) {",
+                  "    const body = pm.response.json();",
+                  "    pm.collectionVariables.set(\"employeeId\", body.id);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"full_name\": \"Иван Иванов\",\r\n    \"position\": \"Разработчик\"\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{childDeptId}}/employees/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{childDeptId}}",
+                "employees",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "03 POST employee",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"full_name\": \"Иван Иванов\",\r\n    \"position\": \"Разработчик\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{childDeptId}}/employees/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{childDeptId}}",
+                    "employees",
+                    ""
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:26:35 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "146"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"id\": 1,\n    \"department_id\": 29,\n    \"full_name\": \"Иван Иванов\",\n    \"position\": \"Разработчик\",\n    \"created_at\": \"2026-05-28T10:26:35.78563+05:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "04 GET root depth=2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{rootDeptId}}?depth=2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{rootDeptId}}"
+              ],
+              "query": [
+                {
+                  "key": "depth",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "05 PATCH rename child",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Новое название\"\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{childDeptId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{childDeptId}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "05 PATCH rename child",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Новое название\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{childDeptId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{childDeptId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:27:39 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "109"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"id\": 29,\n    \"name\": \"Новое название\",\n    \"parent_id\": 28,\n    \"created_at\": \"2026-05-28T10:25:45.250209+05:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "06 DELETE child",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{childDeptId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{childDeptId}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "06 DELETE child",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{childDeptId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{childDeptId}}"
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:27:51 GMT"
+                }
+              ],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        },
+        {
+          "name": "07 GET deleted child",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{childDeptId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{childDeptId}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "07 GET deleted child",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{childDeptId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{childDeptId}}"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:28:19 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "111"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"title\": \"NOT_FOUND\",\n    \"status\": 404,\n    \"detail\": \"запись с таким ключом не существует\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "08 DELETE child again",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{childDeptId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{childDeptId}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "08 DELETE child again",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{childDeptId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{childDeptId}}"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:28:35 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "111"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"title\": \"NOT_FOUND\",\n    \"status\": 404,\n    \"detail\": \"запись с таким ключом не существует\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Выполнять по порядку. Сохраняет rootDeptId, childDeptId, employeeId."
+    },
+    {
+      "name": "02 POST departments",
+      "item": [
+        {
+          "name": "Дубликат имени",
+          "item": [
+            {
+              "name": "01 create first",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {",
+                      "    pm.response.to.have.status(201);",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"DupTest\",\r\n    \"parent_id\": {{rootDeptId}}\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    ""
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "01 create first",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"name\": \"DupTest\",\r\n    \"parent_id\": {{rootDeptId}}\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/departments/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "departments",
+                        ""
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=UTF-8"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 28 May 2026 05:28:59 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "89"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"id\": 30,\n    \"name\": \"DupTest\",\n    \"parent_id\": 28,\n    \"created_at\": \"2026-05-28T10:28:59.483166+05:00\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "02 create duplicate",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 409\", function () {",
+                      "    pm.response.to.have.status(409);",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"DupTest\",\r\n    \"parent_id\": {{rootDeptId}}\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    ""
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "02 create duplicate",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"name\": \"DupTest\",\r\n    \"parent_id\": {{rootDeptId}}\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/departments/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "departments",
+                        ""
+                      ]
+                    }
+                  },
+                  "status": "Conflict",
+                  "code": 409,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=UTF-8"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 28 May 2026 05:29:16 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "218"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"title\": \"CONFLICT\",\n    \"status\": 409,\n    \"detail\": \"запись с таким ключом уже существует: подразделение с названием DupTest уже существует у родителя\"\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Успех без parent",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Sales\"\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Успех без parent",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Sales\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    ""
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:29:59 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "72"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"id\": 31,\n    \"name\": \"Sales\",\n    \"created_at\": \"2026-05-28T10:29:59.430163+05:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Успех с parent",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Backend\",\"parent_id\":{{rootDeptId}}}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Успех с parent",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Backend\",\r\n    \"parent_id\": {{rootDeptId}}\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    ""
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:30:29 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "89"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"id\": 32,\n    \"name\": \"Backend\",\n    \"parent_id\": 28,\n    \"created_at\": \"2026-05-28T10:30:29.762878+05:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Пустое name",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"\"\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Пустое name",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    ""
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:30:53 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "90"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"title\": \"VALIDATION_ERROR\",\n    \"status\": 400,\n    \"detail\": \"некорректный запрос\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Нет поля name",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Нет поля name",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    ""
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:31:21 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "90"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"title\": \"VALIDATION_ERROR\",\n    \"status\": 400,\n    \"detail\": \"некорректный запрос\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "parent не существует",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 422\", function () {",
+                  "    pm.response.to.have.status(422);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Orphan\",\r\n    \"parent_id\": 999999\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "parent не существует",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Orphan\",\r\n    \"parent_id\": 999999\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    ""
+                  ]
+                }
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:31:45 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "154"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"title\": \"BUSINESS_VALIDATION_ERROR\",\n    \"status\": 422,\n    \"detail\": \"некорректные данные в запросе: parent_id не существует\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Невалидный JSON",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{name:\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Невалидный JSON",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{name:\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    ""
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:32:10 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "90"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"title\": \"VALIDATION_ERROR\",\n    \"status\": 400,\n    \"detail\": \"некорректный запрос\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Требует rootDeptId из 01 Setup (кроме изолированных 400)."
+    },
+    {
+      "name": "03 GET departments",
+      "item": [
+        {
+          "name": "Успех по умолчанию",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{rootDeptId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{rootDeptId}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Успех по умолчанию",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{rootDeptId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{rootDeptId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:32:25 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "301"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"department\": {\n        \"id\": 28,\n        \"name\": \"Подразделение\",\n        \"created_at\": \"2026-05-28T10:24:51.691583+05:00\"\n    },\n    \"children\": [\n        {\n            \"id\": 30,\n            \"name\": \"DupTest\",\n            \"parent_id\": 28,\n            \"created_at\": \"2026-05-28T10:28:59.483166+05:00\"\n        },\n        {\n            \"id\": 32,\n            \"name\": \"Backend\",\n            \"parent_id\": 28,\n            \"created_at\": \"2026-05-28T10:30:29.762878+05:00\"\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "depth=2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{rootDeptId}}?depth=2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{rootDeptId}}"
+              ],
+              "query": [
+                {
+                  "key": "depth",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "depth=2",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{rootDeptId}}?depth=2",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{rootDeptId}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "depth",
+                      "value": "2"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:32:50 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "301"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"department\": {\n        \"id\": 28,\n        \"name\": \"Подразделение\",\n        \"created_at\": \"2026-05-28T10:24:51.691583+05:00\"\n    },\n    \"children\": [\n        {\n            \"id\": 30,\n            \"name\": \"DupTest\",\n            \"parent_id\": 28,\n            \"created_at\": \"2026-05-28T10:28:59.483166+05:00\"\n        },\n        {\n            \"id\": 32,\n            \"name\": \"Backend\",\n            \"parent_id\": 28,\n            \"created_at\": \"2026-05-28T10:30:29.762878+05:00\"\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "depth=5",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{rootDeptId}}?depth=5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{rootDeptId}}"
+              ],
+              "query": [
+                {
+                  "key": "depth",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "depth=5",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{rootDeptId}}?depth=5",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{rootDeptId}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "depth",
+                      "value": "5"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:33:11 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "301"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"department\": {\n        \"id\": 28,\n        \"name\": \"Подразделение\",\n        \"created_at\": \"2026-05-28T10:24:51.691583+05:00\"\n    },\n    \"children\": [\n        {\n            \"id\": 30,\n            \"name\": \"DupTest\",\n            \"parent_id\": 28,\n            \"created_at\": \"2026-05-28T10:28:59.483166+05:00\"\n        },\n        {\n            \"id\": 32,\n            \"name\": \"Backend\",\n            \"parent_id\": 28,\n            \"created_at\": \"2026-05-28T10:30:29.762878+05:00\"\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "id не число",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/departments/abc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "abc"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "id не число",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/abc",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "abc"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:33:38 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "141"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"title\": \"VALIDATION_ERROR\",\n    \"status\": 400,\n    \"detail\": \"некорректный запрос: некорректное значение id: abc\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "id=0",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/departments/0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "0"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "id=0",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/0",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "0"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:34:00 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "139"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"title\": \"VALIDATION_ERROR\",\n    \"status\": 400,\n    \"detail\": \"некорректный запрос: некорректное значение id: 0\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Не найден",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{nonExistentDeptId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{nonExistentDeptId}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Не найден",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{nonExistentDeptId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{nonExistentDeptId}}"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:34:25 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "111"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"title\": \"NOT_FOUND\",\n    \"status\": 404,\n    \"detail\": \"запись с таким ключом не существует\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "depth=0",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 422\", function () {",
+                  "    pm.response.to.have.status(422);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{rootDeptId}}?depth=0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{rootDeptId}}"
+              ],
+              "query": [
+                {
+                  "key": "depth",
+                  "value": "0"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "depth=0",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{rootDeptId}}?depth=0",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{rootDeptId}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "depth",
+                      "value": "0"
+                    }
+                  ]
+                }
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:34:43 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "233"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"title\": \"BUSINESS_VALIDATION_ERROR\",\n    \"status\": 422,\n    \"detail\": \"некорректные данные в запросе: некорректное значение depth=0: значение вне диапазона допустимых\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "depth=6",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 422\", function () {",
+                  "    pm.response.to.have.status(422);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{rootDeptId}}?depth=6",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{rootDeptId}}"
+              ],
+              "query": [
+                {
+                  "key": "depth",
+                  "value": "6"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "depth=6",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{rootDeptId}}?depth=6",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{rootDeptId}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "depth",
+                      "value": "6"
+                    }
+                  ]
+                }
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:35:06 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "233"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"title\": \"BUSINESS_VALIDATION_ERROR\",\n    \"status\": 422,\n    \"detail\": \"некорректные данные в запросе: некорректное значение depth=6: значение вне диапазона допустимых\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "depth=foo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{rootDeptId}}?depth=foo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{rootDeptId}}"
+              ],
+              "query": [
+                {
+                  "key": "depth",
+                  "value": "foo"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "depth=foo",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{rootDeptId}}?depth=foo",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{rootDeptId}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "depth",
+                      "value": "foo"
+                    }
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:35:26 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "105"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"title\": \"VALIDATION_ERROR\",\n    \"status\": 400,\n    \"detail\": \"некорректное значение depth: foo\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "04 PATCH departments",
+      "item": [
+        {
+          "name": "Дубликат имени",
+          "item": [
+            {
+              "name": "01 POST sibling A",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {",
+                      "    pm.response.to.have.status(201);",
+                      "});",
+                      "if (pm.response.code === 201) {",
+                      "    const body = pm.response.json();",
+                      "    pm.collectionVariables.set(\"siblingAId\", body.id);",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"SiblingA\",\r\n    \"parent_id\": {{rootDeptId}}\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    ""
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "01 POST sibling A",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"name\": \"SiblingA\",\r\n    \"parent_id\": {{rootDeptId}}\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/departments/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "departments",
+                        ""
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=UTF-8"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 28 May 2026 05:36:09 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "90"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"id\": 33,\n    \"name\": \"SiblingA\",\n    \"parent_id\": 28,\n    \"created_at\": \"2026-05-28T10:36:09.415614+05:00\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "02 POST sibling B",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {",
+                      "    pm.response.to.have.status(201);",
+                      "});",
+                      "if (pm.response.code === 201) {",
+                      "    const body = pm.response.json();",
+                      "    pm.collectionVariables.set(\"siblingBId\", body.id);",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"SiblingB\",\r\n    \"parent_id\": {{rootDeptId}}\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    ""
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "02 POST sibling B",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"name\": \"SiblingB\",\r\n    \"parent_id\": {{rootDeptId}}\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/departments/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "departments",
+                        ""
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=UTF-8"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 28 May 2026 05:36:24 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "90"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"id\": 34,\n    \"name\": \"SiblingB\",\n    \"parent_id\": 28,\n    \"created_at\": \"2026-05-28T10:36:24.158317+05:00\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "03 PATCH A to B name",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Status code is 409\", function () {",
+                      "    pm.response.to.have.status(409);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"name\":\"SiblingB\"}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{siblingAId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{siblingAId}}"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "03 PATCH A to B name",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\"name\":\"SiblingB\"}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/departments/{{siblingAId}}",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "departments",
+                        "{{siblingAId}}"
+                      ]
+                    }
+                  },
+                  "status": "Conflict",
+                  "code": 409,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=UTF-8"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 28 May 2026 05:37:10 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "221"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"title\": \"CONFLICT\",\n    \"status\": 409,\n    \"detail\": \"запись с таким ключом уже существует: подразделение с таким названием уже существует у родителя\"\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Переименование",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"HQ Updated\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{rootDeptId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{rootDeptId}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Переименование",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"HQ Updated\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{rootDeptId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{rootDeptId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:38:29 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "77"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"id\": 28,\n    \"name\": \"HQ Updated\",\n    \"created_at\": \"2026-05-28T10:24:51.691583+05:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "parent_id null",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"parent_id\": null\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{rootDeptId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{rootDeptId}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "parent_id null",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"parent_id\": null\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{rootDeptId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{rootDeptId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:38:53 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "77"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"id\": 28,\n    \"name\": \"HQ Updated\",\n    \"created_at\": \"2026-05-28T10:24:51.691583+05:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Нет полей",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{rootDeptId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{rootDeptId}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Нет полей",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{rootDeptId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{rootDeptId}}"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:45:30 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "164"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"title\": \"VALIDATION_ERROR\",\n    \"status\": 400,\n    \"detail\": \"некорректный запрос: не передано ни одно поле для обновления\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "name null",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": null\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{rootDeptId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{rootDeptId}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "name null",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": null\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{rootDeptId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{rootDeptId}}"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:47:08 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "87"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"title\": \"VALIDATION_ERROR\",\n    \"status\": 400,\n    \"detail\": \"name не может быть null\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "parent_id = self",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"parent_id\": {{rootDeptId}}\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{rootDeptId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{rootDeptId}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "parent_id = self",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"parent_id\": {{rootDeptId}}\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{rootDeptId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{rootDeptId}}"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:50:54 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "140"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"title\": \"VALIDATION_ERROR\",\n    \"status\": 400,\n    \"detail\": \"некорректный запрос: parent_id не может быть равен id\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Не найден",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"X\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{nonExistentDeptId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{nonExistentDeptId}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Не найден",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"X\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{nonExistentDeptId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{nonExistentDeptId}}"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:51:22 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "111"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"title\": \"NOT_FOUND\",\n    \"status\": 404,\n    \"detail\": \"запись с таким ключом не существует\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "parent не существует",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 422\", function () {",
+                  "    pm.response.to.have.status(422);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"parent_id\": 999999\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{rootDeptId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{rootDeptId}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "parent не существует",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"parent_id\": 999999\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{rootDeptId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{rootDeptId}}"
+                  ]
+                }
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:52:24 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "50"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"title\": \"BUSINESS_VALIDATION_ERROR\",\n    \"status\": 422\n}"
+            }
+          ]
+        },
+        {
+          "name": "Неизвестное поле",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"extra\": 1\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{rootDeptId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{rootDeptId}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Неизвестное поле",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"extra\": 1\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{rootDeptId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{rootDeptId}}"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 05:53:06 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "90"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"title\": \"VALIDATION_ERROR\",\n    \"status\": 400,\n    \"detail\": \"некорректный запрос\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "05 DELETE departments",
+      "item": [
+        {
+          "name": "DELETE success",
+          "item": [
+            {
+              "name": "01 POST temp department",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {",
+                      "    pm.response.to.have.status(201);",
+                      "});",
+                      "if (pm.response.code === 201) {",
+                      "    const body = pm.response.json();",
+                      "    pm.collectionVariables.set(\"tempDeptId\", body.id);",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"ToDelete\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    ""
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "01 POST temp department",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"name\": \"ToDelete\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/departments/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "departments",
+                        ""
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=UTF-8"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 28 May 2026 06:01:25 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "74"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"id\": 35,\n    \"name\": \"ToDelete\",\n    \"created_at\": \"2026-05-28T11:01:25.45997+05:00\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "02 DELETE temp",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Status code is 204\", function () {",
+                      "    pm.response.to.have.status(204);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{tempDeptId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{tempDeptId}}"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "02 DELETE temp",
+                  "originalRequest": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/departments/{{tempDeptId}}",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "departments",
+                        "{{tempDeptId}}"
+                      ]
+                    }
+                  },
+                  "status": "No Content",
+                  "code": 204,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "Date",
+                      "value": "Thu, 28 May 2026 06:01:46 GMT"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Повтор после удаления",
+          "item": [
+            {
+              "name": "01 POST for delete",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {",
+                      "    pm.response.to.have.status(201);",
+                      "});",
+                      "if (pm.response.code === 201) {",
+                      "    const body = pm.response.json();",
+                      "    pm.collectionVariables.set(\"deletedDeptId\", body.id);",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"DeleteTwice\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    ""
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "01 POST for delete",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"name\": \"DeleteTwice\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/departments/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "departments",
+                        ""
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=UTF-8"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 28 May 2026 06:02:02 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "78"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"id\": 36,\n    \"name\": \"DeleteTwice\",\n    \"created_at\": \"2026-05-28T11:02:02.512162+05:00\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "02 DELETE once",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Status code is 204\", function () {",
+                      "    pm.response.to.have.status(204);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{deletedDeptId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{deletedDeptId}}"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "02 DELETE once",
+                  "originalRequest": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/departments/{{deletedDeptId}}",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "departments",
+                        "{{deletedDeptId}}"
+                      ]
+                    }
+                  },
+                  "status": "No Content",
+                  "code": 204,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "Date",
+                      "value": "Thu, 28 May 2026 06:02:16 GMT"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": null
+                }
+              ]
+            },
+            {
+              "name": "03 DELETE again",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Status code is 404\", function () {",
+                      "    pm.response.to.have.status(404);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{deletedDeptId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{deletedDeptId}}"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "03 DELETE again",
+                  "originalRequest": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/departments/{{deletedDeptId}}",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "departments",
+                        "{{deletedDeptId}}"
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=UTF-8"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 28 May 2026 06:02:26 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "111"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"title\": \"NOT_FOUND\",\n    \"status\": 404,\n    \"detail\": \"запись с таким ключом не существует\"\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "id=abc",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/departments/abc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "abc"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "id=abc",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/abc",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "abc"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 06:02:48 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "141"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"title\": \"VALIDATION_ERROR\",\n    \"status\": 400,\n    \"detail\": \"некорректный запрос: некорректное значение id: abc\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "06 POST employees",
+      "item": [
+        {
+          "name": "Успех",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"full_name\": \"Анна Петрова\",\r\n    \"position\": \"Analyst\"\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{rootDeptId}}/employees/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{rootDeptId}}",
+                "employees",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Успех",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"full_name\": \"Анна Петрова\",\r\n    \"position\": \"Analyst\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{rootDeptId}}/employees/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{rootDeptId}}",
+                    "employees",
+                    ""
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 06:03:11 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "134"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"id\": 2,\n    \"department_id\": 28,\n    \"full_name\": \"Анна Петрова\",\n    \"position\": \"Analyst\",\n    \"created_at\": \"2026-05-28T11:03:11.339282+05:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "С hired_at",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"full_name\": \"Петр Сидоров\",\r\n    \"position\": \"QA\",\r\n    \"hired_at\": \"2024-01-15\"\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{rootDeptId}}/employees/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{rootDeptId}}",
+                "employees",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "С hired_at",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"full_name\": \"Петр Сидоров\",\r\n    \"position\": \"QA\",\r\n    \"hired_at\": \"2024-01-15\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{rootDeptId}}/employees/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{rootDeptId}}",
+                    "employees",
+                    ""
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 06:03:32 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "153"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"id\": 3,\n    \"department_id\": 28,\n    \"full_name\": \"Петр Сидоров\",\n    \"position\": \"QA\",\n    \"hired_at\": \"2024-01-15\",\n    \"created_at\": \"2026-05-28T11:03:32.666309+05:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Dept не найден",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"full_name\": \"Ghost\",\r\n    \"position\": \"None\"\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{nonExistentDeptId}}/employees/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{nonExistentDeptId}}",
+                "employees",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Dept не найден",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"full_name\": \"Ghost\",\r\n    \"position\": \"None\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{nonExistentDeptId}}/employees/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{nonExistentDeptId}}",
+                    "employees",
+                    ""
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 06:03:48 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "111"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"title\": \"NOT_FOUND\",\n    \"status\": 404,\n    \"detail\": \"запись с таким ключом не существует\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Пустой full_name",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"full_name\": \"\",\r\n    \"position\": \"Dev\"\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{rootDeptId}}/employees/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{rootDeptId}}",
+                "employees",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Пустой full_name",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"full_name\": \"\",\r\n    \"position\": \"Dev\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{rootDeptId}}/employees/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{rootDeptId}}",
+                    "employees",
+                    ""
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 06:04:05 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "90"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"title\": \"VALIDATION_ERROR\",\n    \"status\": 400,\n    \"detail\": \"некорректный запрос\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Неверный hired_at",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"full_name\": \"Bad Date\",\r\n    \"position\": \"Dev\",\r\n    \"hired_at\": \"31.12.2024\"\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{rootDeptId}}/employees/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{rootDeptId}}",
+                "employees",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Неверный hired_at",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"full_name\": \"Bad Date\",\r\n    \"position\": \"Dev\",\r\n    \"hired_at\": \"31.12.2024\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{rootDeptId}}/employees/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{rootDeptId}}",
+                    "employees",
+                    ""
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 06:04:23 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "90"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"title\": \"VALIDATION_ERROR\",\n    \"status\": 400,\n    \"detail\": \"некорректный запрос\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "07 Ad hoc",
+      "item": [
+        {
+          "name": "departments with emp",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/departments/28?depth=ы",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "28"
+              ],
+              "query": [
+                {
+                  "key": "depth",
+                  "value": "ы"
+                },
+                {
+                  "key": "include_employees",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "departments with emp",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{rootDeptId}}?depth=5",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{rootDeptId}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "depth",
+                      "value": "5"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 08:10:51 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "770"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"department\": {\n        \"id\": 28,\n        \"name\": \"HQ Updated\",\n        \"created_at\": \"2026-05-28T10:24:51.691583+05:00\"\n    },\n    \"children\": [\n        {\n            \"id\": 30,\n            \"name\": \"DupTest\",\n            \"parent_id\": 28,\n            \"created_at\": \"2026-05-28T10:28:59.483166+05:00\"\n        },\n        {\n            \"id\": 32,\n            \"name\": \"Backend\",\n            \"parent_id\": 28,\n            \"created_at\": \"2026-05-28T10:30:29.762878+05:00\"\n        },\n        {\n            \"id\": 33,\n            \"name\": \"SiblingA\",\n            \"parent_id\": 28,\n            \"created_at\": \"2026-05-28T10:36:09.415614+05:00\"\n        },\n        {\n            \"id\": 34,\n            \"name\": \"SiblingB\",\n            \"parent_id\": 28,\n            \"created_at\": \"2026-05-28T10:36:24.158317+05:00\"\n        }\n    ],\n    \"employees\": [\n        {\n            \"id\": 2,\n            \"department_id\": 28,\n            \"full_name\": \"Анна Петрова\",\n            \"position\": \"Analyst\",\n            \"created_at\": \"2026-05-28T11:03:11.339282+05:00\"\n        },\n        {\n            \"id\": 3,\n            \"department_id\": 28,\n            \"full_name\": \"Петр Сидоров\",\n            \"position\": \"QA\",\n            \"hired_at\": \"2024-01-15\",\n            \"created_at\": \"2026-05-28T11:03:32.666309+05:00\"\n        }\n    ]\n}"
+            },
+            {
+              "name": "departments with emp",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/20?depth=5",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "20"
+                  ],
+                  "query": [
+                    {
+                      "key": "depth",
+                      "value": "5"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 08:40:02 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "85"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"department\": {\n        \"id\": 20,\n        \"name\": \"sdf\",\n        \"created_at\": \"2026-05-27T19:06:44.561459+05:00\"\n    }\n}"
+            },
+            {
+              "name": "include_employees=false",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/28?depth=5&include_employees=false",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "28"
+                  ],
+                  "query": [
+                    {
+                      "key": "depth",
+                      "value": "5"
+                    },
+                    {
+                      "key": "include_employees",
+                      "value": "false"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 08:47:40 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "467"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"department\": {\n        \"id\": 28,\n        \"name\": \"HQ Updated\",\n        \"created_at\": \"2026-05-28T10:24:51.691583+05:00\"\n    },\n    \"children\": [\n        {\n            \"id\": 30,\n            \"name\": \"DupTest\",\n            \"parent_id\": 28,\n            \"created_at\": \"2026-05-28T10:28:59.483166+05:00\"\n        },\n        {\n            \"id\": 32,\n            \"name\": \"Backend\",\n            \"parent_id\": 28,\n            \"created_at\": \"2026-05-28T10:30:29.762878+05:00\"\n        },\n        {\n            \"id\": 33,\n            \"name\": \"SiblingA\",\n            \"parent_id\": 28,\n            \"created_at\": \"2026-05-28T10:36:09.415614+05:00\"\n        },\n        {\n            \"id\": 34,\n            \"name\": \"SiblingB\",\n            \"parent_id\": 28,\n            \"created_at\": \"2026-05-28T10:36:24.158317+05:00\"\n        }\n    ]\n}"
+            },
+            {
+              "name": "include_employees=true",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/28?depth=5&include_employees=true",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "28"
+                  ],
+                  "query": [
+                    {
+                      "key": "depth",
+                      "value": "5"
+                    },
+                    {
+                      "key": "include_employees",
+                      "value": "true"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 08:48:12 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "770"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"department\": {\n        \"id\": 28,\n        \"name\": \"HQ Updated\",\n        \"created_at\": \"2026-05-28T10:24:51.691583+05:00\"\n    },\n    \"children\": [\n        {\n            \"id\": 30,\n            \"name\": \"DupTest\",\n            \"parent_id\": 28,\n            \"created_at\": \"2026-05-28T10:28:59.483166+05:00\"\n        },\n        {\n            \"id\": 32,\n            \"name\": \"Backend\",\n            \"parent_id\": 28,\n            \"created_at\": \"2026-05-28T10:30:29.762878+05:00\"\n        },\n        {\n            \"id\": 33,\n            \"name\": \"SiblingA\",\n            \"parent_id\": 28,\n            \"created_at\": \"2026-05-28T10:36:09.415614+05:00\"\n        },\n        {\n            \"id\": 34,\n            \"name\": \"SiblingB\",\n            \"parent_id\": 28,\n            \"created_at\": \"2026-05-28T10:36:24.158317+05:00\"\n        }\n    ],\n    \"employees\": [\n        {\n            \"id\": 2,\n            \"department_id\": 28,\n            \"full_name\": \"Анна Петрова\",\n            \"position\": \"Analyst\",\n            \"created_at\": \"2026-05-28T11:03:11.339282+05:00\"\n        },\n        {\n            \"id\": 3,\n            \"department_id\": 28,\n            \"full_name\": \"Петр Сидоров\",\n            \"position\": \"QA\",\n            \"hired_at\": \"2024-01-15\",\n            \"created_at\": \"2026-05-28T11:03:32.666309+05:00\"\n        }\n    ]\n}"
+            },
+            {
+              "name": "depth 400",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/28?depth=ы",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "28"
+                  ],
+                  "query": [
+                    {
+                      "key": "depth",
+                      "value": "ы"
+                    },
+                    {
+                      "key": "include_employees",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 08:54:43 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "110"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"title\": \"VALIDATION_ERROR\",\n    \"status\": 400,\n    \"detail\": \"depth=\\\"ы\\\", разрешено число от 1 до 5\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "employees",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"full_name\": \"Анна Петрова\",\r\n    \"position\": \"Analyst\"\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{rootDeptId}}/employees/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{rootDeptId}}",
+                "employees",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Успех",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"full_name\": \"Анна Петрова\",\r\n    \"position\": \"Analyst\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{rootDeptId}}/employees/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{rootDeptId}}",
+                    "employees",
+                    ""
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=UTF-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 06:03:11 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "134"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"id\": 2,\n    \"department_id\": 28,\n    \"full_name\": \"Анна Петрова\",\n    \"position\": \"Analyst\",\n    \"created_at\": \"2026-05-28T11:03:11.339282+05:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "02 DELETE temp Copy",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{tempDeptId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{tempDeptId}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "02 DELETE temp",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/departments/{{tempDeptId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "departments",
+                    "{{tempDeptId}}"
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Date",
+                  "value": "Thu, 28 May 2026 06:01:46 GMT"
+                }
+              ],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        },
+        {
+          "name": "POST temp department",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Новый департамент уровень 2\",\r\n    \"parent_id\": 37\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "rootDeptId",
+      "value": ""
+    },
+    {
+      "key": "childDeptId",
+      "value": ""
+    },
+    {
+      "key": "employeeId",
+      "value": ""
+    },
+    {
+      "key": "nonExistentDeptId",
+      "value": "999999"
+    },
+    {
+      "key": "tempDeptId",
+      "value": ""
+    },
+    {
+      "key": "siblingAId",
+      "value": ""
+    },
+    {
+      "key": "siblingBId",
+      "value": ""
+    },
+    {
+      "key": "deletedDeptId",
+      "value": ""
+    },
+    {
+      "key": "baseUrl",
+      "value": ""
+    }
+  ]
+}

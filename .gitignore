@@ -34,7 +34,4 @@ go.work.sum
 app.log
 config.yaml
 .k6/
-loadtests/k6/state/*
-!loadtests/k6/state/.gitkeep
 k6
-docs
