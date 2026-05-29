@@ -1,5 +1,14 @@
 # org-structure-api
 [![CI](https://github.com/boldlogic/org-structure-api/actions/workflows/go.yml/badge.svg)](https://github.com/boldlogic/org-structure-api/actions/workflows/go.yml)
+REST-API сервис организационной структуры компании. Позволяет управлять иерархией подразделений и создавать сотрудников внутри подразделений. 
+
+**Стек**: Go, PostgreSQL, Docker.
+- Слоистая архитектура через интерфейсы
+- HTTP через `net/http`
+- Тесты через `testify`, репозиторный слой замокан
+- Работа с БД через raw sql поверх `GORM`
+- Миграции через отдельный сервис миграции на базе `goose`
+- Повторяемый код - с моего библиотечного репозитория `packages`
 
 ## Запуск
 

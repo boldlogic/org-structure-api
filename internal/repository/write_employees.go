@@ -51,11 +51,6 @@ func (r *Repo) ReassignAndDelete(ctx context.Context, departmentId int64, newDep
 func (r *Repo) CreateEmployee(ctx context.Context, emp models.Employee) (result models.Employee, err error) {
 	defer func() { r.logWrapper("CreateEmployee", err) }()
 
-	_, err = r.SelectDepartmentById(ctx, emp.DepartmentID)
-	if err != nil {
-		return models.Employee{}, err
-	}
-
 	var row employee
 	err = r.db.WithContext(ctx).Raw(insertEmployee, emp.DepartmentID, emp.FullName, emp.Position, emp.HiredAt).Scan(&row).Error
 	if err != nil {

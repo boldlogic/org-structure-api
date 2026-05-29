@@ -6,6 +6,7 @@ import (
 
 	"github.com/boldlogic/org-structure-api/internal/models"
 	"github.com/boldlogic/packages/validate"
+	"golang.org/x/sync/errgroup"
 )
 
 func (s *Service) GetDepartment(ctx context.Context, id int64, depth int, includeEmployeeFlag bool) (models.Department, []models.Department, []models.Employee, error) {
@@ -21,15 +22,27 @@ func (s *Service) GetDepartment(ctx context.Context, id int64, depth int, includ
 	}
 
 	var emp []models.Employee
+	var children []models.Department
 
+	g, gCtx := errgroup.WithContext(ctx)
 	if includeEmployeeFlag {
-		emp, err = s.repo.SelectEmployeesDepartmentById(ctx, id)
-		if err != nil {
-			return models.Department{}, nil, nil, err
-		}
-	}
+		g.Go(func() error {
+			var err error
+			emp, err = s.repo.SelectEmployeesDepartmentById(gCtx, id)
+			return err
 
-	children, err := s.repo.SelectChildrenDepartments(ctx, dep.ID, depth)
+		})
+
+	}
+	g.Go(func() error {
+		var err error
+		children, err = s.repo.SelectChildrenDepartments(gCtx, id, depth)
+		return err
+
+	})
+
+	err = g.Wait()
+
 	if err != nil {
 		return models.Department{}, nil, nil, err
 	}

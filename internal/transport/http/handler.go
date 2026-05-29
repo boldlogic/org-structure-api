@@ -33,8 +33,8 @@ func NewHandler(svc Service, logger *zap.Logger) *Handler {
 
 func (h *Handler) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /health", h.health)
-	mux.HandleFunc("POST /departments/{$}", h.Adapt(h.createDepartment))
-	mux.HandleFunc("POST /departments/{id}/employees/{$}", h.Adapt(h.createEmployee))
+	mux.HandleFunc("POST /departments", h.Adapt(h.createDepartment))
+	mux.HandleFunc("POST /departments/{id}/employees", h.Adapt(h.createEmployee))
 	mux.HandleFunc("GET /departments/{id}", h.Adapt(h.getDepartment))
 	mux.HandleFunc("PATCH /departments/{id}", h.Adapt(h.updateDepartment))
 	mux.HandleFunc("DELETE /departments/{id}", h.Adapt(h.deleteDepartment))

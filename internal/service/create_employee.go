@@ -22,5 +22,10 @@ func (s *Service) CreateEmployee(ctx context.Context, emp models.Employee) (mode
 	emp.FullName = trimmedName
 	emp.Position = trimmedPosition
 
+	_, err = s.repo.SelectDepartmentById(ctx, emp.DepartmentID)
+	if err != nil {
+		return models.Employee{}, err
+	}
+
 	return s.repo.CreateEmployee(ctx, emp)
 }

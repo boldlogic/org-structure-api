@@ -17,32 +17,34 @@ const (
 				?::varchar(200) AS name,
 				?::integer AS parent_id
 		)
-		INSERT INTO org.departments (name, parent_id)
+		INSERT INTO
+			org.departments (name, parent_id)
 		SELECT
 			name,
 			parent_id
-		FROM src
+		FROM
+			src
 		WHERE
 			NOT EXISTS (
-				SELECT 1
-				FROM org.departments d
+				SELECT
+					1
+				FROM
+					org.departments d
 				WHERE
-					d.name = src.name
-					AND (
-						(d.parent_id IS NULL AND src.parent_id IS NULL)
-						OR d.parent_id = src.parent_id
-					)
+					Coalesce(d.parent_id, 0) = Coalesce(src.parent_id, 0)
+					AND d.name = src.name
 			)
 			AND (
 				src.parent_id IS NULL
 				OR EXISTS (
-					SELECT 1
-					FROM org.departments e
-					WHERE e.id = src.parent_id
+					SELECT
+						1
+					FROM
+						org.departments e
+					WHERE
+						e.id = src.parent_id
 				)
-			)
-		RETURNING
-			id,
+			) RETURNING id,
 			name,
 			parent_id,
 			created_at
